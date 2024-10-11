@@ -2,10 +2,12 @@ from numpy import array, zeros, linspace, concatenate
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
 
-# Función de Kepler que define F(U, t) -> Función analizada
+############################################################################
+############################ FUNCIÓN ANALIZADA #############################
+############################################################################
 
 def Funcion(U, t):
-    F = concatenate((U[2:4], -U[0:2]/norm(U[0:2])**3)) # Función F
+    F = concatenate((U[2:4], -U[0:2]/norm(U[0:2])**3)) # Función F de Euler
     return F
 
 ############################################################################
@@ -50,10 +52,10 @@ def Cauchy(F, t, N, U0, Esquema):
 ############################################################################
 ######################## CONDICIONES INICIALES #############################
 ############################################################################
+#         ->->->->-> Lo único que hay que cambiar <-<-<-<-
 
 T = 20 # Periodo
 N = 200 # Nº de particiones
-dt = T/N # Equiespaciado temporal
 
 x0 = 1 # x Inicial
 y0 = 0 # y Inicial
