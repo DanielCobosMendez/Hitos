@@ -1,6 +1,7 @@
 from numpy import array, zeros, linspace, concatenate
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
+from scipy.optimize import newton
 
 # Condiciones iniciales
 
@@ -25,6 +26,25 @@ U_Euler[0, :] = U0
 for i in range(1, N):
     F = concatenate((U_Euler[i-1,2:4], -U_Euler[i-1,0:2]/norm(U_Euler[i-1,0:2])**3)) # Función F
     U_Euler[i,:] = U_Euler[i-1,:] + dt * F # Vector de estado
+
+############################################################################
+######################## MÉTODO DE EULER INVERSO ###########################
+############################################################################
+
+# TENGO QUE HACER EL NEWTON A MANO
+
+#U_EulerI = array(zeros((N, len(U0)))) # Vector de estado
+#X = array(zeros((N, len(U0))))
+#U_EulerI[0, :] = U0
+#
+#for i in range(1, N):
+#    F = concatenate((U_EulerI[i-1,2:4], -U_EulerI[i-1,0:2]/norm(U_EulerI[i-1,0:2])**3)) # Función Fn
+#    X[i-1, :] = U_EulerI[i-1, :] + dt * F
+#    Fx = concatenate((X[i-1,2:4], -X[i,0:2]/norm(X[i-1,0:2])**3))
+#    G = X[i-1, :] - U_EulerI[i-1,:] - dt * Fx # G = U + dt * F - U - dt * F
+#    U_EulerI[i, :] = newton(G, U_EulerI[i-1, :])
+
+
 
 ############################################################################
 ############################### MÉTODO RK2 #################################
@@ -99,3 +119,6 @@ plt.xlabel('Tiempo')
 plt.ylabel('Velocidad')
 plt.legend(loc='upper right')
 plt.show()
+
+
+
