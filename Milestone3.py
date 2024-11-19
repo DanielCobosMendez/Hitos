@@ -6,6 +6,7 @@ from TemporalScheme.Error import Error
 from TemporalScheme.ErrorCauchy import ErrorCauchy
 from TemporalScheme.Convergencia import Conv
 import matplotlib.pyplot as plt
+from math import pi
 
 ############################################################################
 ######################## CONDICIONES INICIALES #############################
@@ -14,8 +15,6 @@ import matplotlib.pyplot as plt
 
 T = 0.5 # Periodo
 N = 10 # Nº de particiones de U1
-
-
 
 x0 = 1 # x Inicial
 y0 = 0 # y Inicial
@@ -34,15 +33,19 @@ E_RK2 = ErrorCauchy(Funcion, U0, T, N, RK2)
 E_RK4 = ErrorCauchy(Funcion, U0, T, N, RK4)
 E_CN = ErrorCauchy(Funcion, U0, T, N, CrankNicholson)
 
-print(E_Euler)
 ############################################################################
 ############################ CONVERGENCIA ##################################
 ############################################################################
 
-q_Euler, logNEuler = Conv(Funcion, U0, T, N, Euler)
+t1 = linspace(0, T, N)
+
+logEuler, logNEuler, OrderEuler = Conv(Funcion, U0, t1, N, Euler, T)
 #q_RK2 = Conv(Funcion, U0, T, N, RK2)
 #q_RK4 = Conv(Funcion, U0, T, N, RK4)
 #q_CN = Conv(Funcion, U0, T, N, CrankNicholson)
+
+plt.plot(logNEuler, logEuler)
+plt.show()
 
 ############################################################################
 ############################## GRÁFICAS ####################################
@@ -58,7 +61,7 @@ plt.ylabel('Error')
 plt.legend(loc='upper right')
 plt.grid() #############
 #plt.axis('equal') ###################
-plt.ylim(-0.003,0.003)
+#plt.ylim(-0.003,0.003)
 plt.show()
 
 # Gráfica comparación de posiciones
