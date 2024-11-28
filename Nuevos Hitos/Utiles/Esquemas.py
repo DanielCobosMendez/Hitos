@@ -205,15 +205,16 @@ def Conv(F, dt, U0, Esquema, T, N):
 
     t1 = dt
 
-    for i in range(0, m+1):
+    for i in range(0, m+1): 
         aux = len(t1) - 1
         Error, U = ErrorCauchy(F, t1, U0, Esquema, T, N)
         logE[i] = log10(norm(Error[aux, :]))
         logN[i] = log10(float(aux))
         t1 = refine_mesh(t1)
 
-    y = logE[ logE > -12 ]
+    y = logE[ logE > -12 ] # filtrado de los valores de logE > -12
     x = logN[ 0:len(y) ]
     order, b = polyfit(x, y, 1)
+    print("Order = ", order, "Esquema = ", Esquema)
 
-    return logE, logN, order
+    return y, x, order

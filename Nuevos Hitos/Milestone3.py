@@ -1,13 +1,29 @@
 from numpy import concatenate, linspace
 from Utiles.Esquemas import ErrorCauchy, Euler, RK2, RK4, EulerI, CrankNicolson, Conv, LeapFrog
-from Utiles.Funcion import Funcion
+from Utiles.Funcion import Funcion, Armonico
 import matplotlib.pyplot as plt
 
-# Condiciones iniciales Euler
+############################################################################
+##################### CONDICIONES INICIALES ################################
+############################################################################
+"""
+INPUTS:
+    FuncionE: Función escogida a resolver 
+    T: Periodo
+    N: Nº de particiones
+OUTPUTS:
+    U0: Vector de estado inicial
+    dt: malla temporal
+"""
 
-r = [1, 0]
-dr = [0, 1]
-U0 = concatenate((r, dr)) # Vector de estado inicial
+FuncionE = Armonico # Función escogida a analizar
+
+if FuncionE == "Armonico":
+    U0 = [1, 0]
+elif FuncionE == "Funcion":
+    r = [1, 0]
+    dr = [0, 1]
+    U0 = concatenate((r, dr)) # Vector de estado inicial
 
 T = 20 # Periodo
 N = 2000 # Particiones
@@ -17,12 +33,12 @@ dt = linspace(0, T, N) # Paso temporal
 ############################# SOLUCIONES ###################################
 ############################################################################
 
-logE_Euler, logN_Euler, qEuler = Conv(Funcion, dt, U0, Euler, T, N)
-logE_RK2, logN_RK2, qRK2 = Conv(Funcion, dt, U0, RK2, T, N)
-logE_RK4, logN_RK4, qRK4 = Conv(Funcion, dt, U0, RK4, T, N)
+logE_Euler, logN_Euler, qEuler = Conv(FuncionE, dt, U0, Euler, T, N)
+logE_RK2, logN_RK2, qRK2 = Conv(FuncionE, dt, U0, RK2, T, N)
+logE_RK4, logN_RK4, qRK4 = Conv(FuncionE, dt, U0, RK4, T, N)
 #logE_EulerI, logN_EulerI, qEulerI = Conv(Funcion, dt, U0, EulerI, T, N)
-logE_CN, logN_CN, qCN = Conv(Funcion, dt, U0, CrankNicolson, T, N)
-logE_LF, logN_LF, qLF = Conv(Funcion, dt, U0, LeapFrog, T, N)
+logE_CN, logN_CN, qCN = Conv(FuncionE, dt, U0, CrankNicolson, T, N)
+logE_LF, logN_LF, qLF = Conv(FuncionE, dt, U0, LeapFrog, T, N)
 
 ############################################################################
 ############################## GRÁFICAS ####################################
