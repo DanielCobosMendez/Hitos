@@ -89,6 +89,22 @@ def CrankNicolson(U, dt, F, t):
     return newton(G, U, maxiter=500)
 
 ############################################################################
+######################## MÉTODO DE LEAP-FROG ###############################
+############################################################################
+"""
+INPUTS:
+    U: Vector de estado U(n-1)
+    dt: Valor equiespaciado temporal
+    F: Función del problema de Cauchy
+    t: Paso temporal
+    U1: Vector de estado U(n)
+OUTPUTS:
+    U(n+1) = U(n-1)+2*dt*F(U(n),t)
+"""
+def LeapFrog(U0, dt, F, t, U1): # U(n+1) = U(n-1) + 2 * dt * F
+    return U0 + 2*dt * F(U1, t)
+
+############################################################################
 ########################### REFINADO MALLA #################################
 ############################################################################
 """
@@ -126,8 +142,14 @@ OUTPUTS:
 def Cauchy(F, dt, U0, Esquema, T, N):
     U = array(zeros((len(dt), len(U0)))) # Definición de U
     U[0,:] = U0 # Asignación del vector de estado inicial
-    for i in range(len(dt)-1):
-        U[i+1, :] = Esquema(U[i,:], dt[i+1]-dt[i], F, T) # Llamada al esquema numérico, e integración por cada paso temporal
+    if Esquema != LeapFrog:
+        for i in range(len(dt)-1):
+            U[i+1, :] = Esquema(U[i,:], dt[i+1]-dt[i], F, T) # Llamada al esquema numérico, e integración por cada paso temporal
+    else:
+        for i in range(1, len(dt)-1):
+            U[1,:] = U[0,:]+dt[1]-dt[0]*F(U0, T)
+            U[i+1, :] = Esquema(U[i,:], dt[i+1]-dt[i], F, T, U[i,:])
+
     return U
 
 ############################################################################
