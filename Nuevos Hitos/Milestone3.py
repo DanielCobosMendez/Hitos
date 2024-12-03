@@ -16,14 +16,17 @@ OUTPUTS:
     dt: malla temporal
 """
 
-FuncionE = Armonico # Función escogida a analizar
+Funcion = "Armonico" # Función escogida a analizar
 
-if FuncionE == "Armonico":
-    U0 = [1, 0]
-elif FuncionE == "Funcion":
-    r = [1, 0]
-    dr = [0, 1]
-    U0 = concatenate((r, dr)) # Vector de estado inicial
+estados_iniciales = {"Armonico":[1, 0], "Funcion":[1, 0, 0, 1]}
+funciones_iniciales = {"Armonico": Armonico, "Funcion": Funcion}
+
+if Funcion in estados_iniciales:
+    U0 = estados_iniciales[Funcion]
+    FuncionE = funciones_iniciales[Funcion]
+else:
+    print("Función no reconocida")
+    U0 = None
 
 T = 20 # Periodo
 N = 2000 # Particiones

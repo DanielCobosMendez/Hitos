@@ -1,5 +1,5 @@
 from scipy.optimize import newton
-from numpy import array, zeros, linspace, log10, polyfit
+from numpy import array, zeros, linspace, log10, polyfit, sqrt
 from numpy.linalg import norm
 
 ############################################################################
@@ -195,8 +195,9 @@ INPUTS:
     T: Periodo
     N: Particiones
 OUTPUTS:
-    U1: Vector de estado según el esquema numérico y los parámetros escogidos
-    Error: Error entre vectores de estado al cambiar el número de puntos de interpolación
+    y: valores de la convergencia
+    x: valores de N para los valores de la convergencia
+    order: orden del esquema numérico
 """
 def Conv(F, dt, U0, Esquema, T, N):
     m = 6 # Puntos de la gráfica (más no que peta)
@@ -214,7 +215,41 @@ def Conv(F, dt, U0, Esquema, T, N):
 
     y = logE[ logE > -12 ] # filtrado de los valores de logE > -12
     x = logN[ 0:len(y) ]
-    order, b = polyfit(x, y, 1)
-    print("Order = ", order, "Esquema = ", Esquema)
+    order = polyfit(x, y, 1)
+    print("Order = ", abs(order), "Esquema = ", Esquema)
 
     return y, x, order
+
+############################################################################
+################### REGIONES DE ESTABILIDAD ################################
+############################################################################
+"""
+INPUTS:
+    Esquema: Esquema temporal utilizado
+    x0: Punto inicial del eje real
+    xf: Punto final del eje real
+    y0: Punto inicial del eje imaginario
+    yf: Punto final del eje imaginario
+    N: Número de particiones
+OUTPUTS:
+    x: equiespaciado de x
+    y: equiespaciado de y
+    rho: valores de r estables
+"""
+def Stab(Esquema, x0, xf, y0, yf, N):
+
+    x = linspace(x0, xf, N) # Mallado en el eje real
+    y = linspace(y0, yf, N) # Mallado en el eje imaginario
+
+    rho = zeros((N,N)) #
+
+    for i in range(N):
+        for j in range(N):
+            w = complex(x[i], y[j])
+            if Esquema == LeapFrog:
+                r = sqrt(Esquema(1, 1, lambda u, t : u*w, 0, 1))
+            else:
+                r = Esquema(1, 1, lambda u, t : u*w, 0)
+            rho[i,j] = abs(r)
+
+    return x, y, rho
